@@ -19,13 +19,13 @@ TOML은 최소한의 구성파일 형식을 이용하여 명확한 의미를 읽
 -------
 
 ```toml
-# TOML 문서! Boom.
+# TOML 문서입니다.
 
 title = "TOML Example"
 
 [owner]
 name = "Lance Uppercut"
-dob = 1979-05-27T07:32:00-08:00 # 일등 날짜 형식? 왜 안됨?
+dob = 1979-05-27T07:32:00-08:00 # 일급 객체로서의 날짜
 
 [database]
 server = "192.168.1.1"
@@ -35,7 +35,7 @@ enabled = true
 
 [servers]
 
-  # 인던트 추가 가능. 탭이나 스페이스 모두 가능. TOML은 상관안함.
+  # 들여쓰기 (탭이나 스페이스)는 허용되지만 필수는 아니다.
   [servers.alpha]
   ip = "10.0.0.1"
   dc = "eqdc10"
@@ -47,7 +47,7 @@ enabled = true
 [clients]
 data = [ ["gamma", "delta"], [1, 2] ]
 
-# 배열 내부에서는 줄바꿈 OK.
+# 배열 내부에서는 줄바꿈 가능.
 hosts = [
   "alpha",
   "omega"
@@ -84,6 +84,9 @@ key = "value"
 ```
 값들은 다음과 같은 타입이어야 합니다: 문자열, 정수, 실수, 참거짓, 날짜시간, 배열, 인라인 테이블. 이외의 값들은 유효하지 않은 값들입니다.
 
+```toml
+key = # INVALID
+```
 
 키
 --------
@@ -97,11 +100,53 @@ bare_key = "value"
 bare-key = "value"
 1234 = "value"
 ```
+따옴표에 둘러싸인 키는 일반 문자열 키와 같은 규칙을 따르지만 더 다양한 종류의 문자를 사용할 수 있습니다.
+```toml
+"127.0.0.1" = "value"
+"character encoding" = "value"
+"ʎǝʞ" = "value"
+'key2' = "value"
+'quoted "value"' = "value"
+```
+
+
+일반적인 문자열로 이루어진 키에는 빈 문자열이 허용이 안되지만 따옴표로 둘러싸인 경우에는 허용됩니다(하지만 권장되지는 않습니다).
+```toml
+= "no key name" # INVALID
+"" = "blank" # VALID but discouraged.
+'' = 'blank' # VALID but discouraged.
+```
+
+점이 사용된 키는 점으로 연결된 일반적인 문자열 또는 따옴표로 둘러싸인 문자열들의 모음입니다. 이러한 형식은 비슷한 속성들을 묶는데 사용될 수 있습니다.
+```toml
+name = "Orange"
+physical.color = "orange"
+physical.shape = "round"
+site."google.com' = true
+```
+
+JSON으로 이러한 구조를 표연하려면 다음과 같을 것입니다:
+```json
+{
+  "name": "Orange",
+  "physical": {
+    "color": "orange",
+    "shape": "round"
+  },
+  "site": {
+    "google.com": true
+  }
+}
+```
+
+
+점 주위의 공백은 무시되지만 그렇다고 불필요하게 사용하지는 않는 것을 권장합니다.
+
 
 문자열
 --------
 
-네가지 문자열 표기법이 존재함: 기본, 여러줄 기본, 리터럴, 여러줄 리터럴. 모든 문자열은 UTF-8 문자열로만 구성됨.
+네가지 문자열 표기법이 존재합니다: 기본, 여러줄 기본, 리터럴, 여러줄 리터럴. 모든 문자열은 UTF-8 문자열로만 구성됩니다.
 
 **기본 문자열 (Basic strings)** 은 큰따옴표로 감쌉니다. 유니코드 문자의 경우 이스케이프 문자를 이용하여 표현할 수 있습니다: 큰따옴표, 백 슬래시, 컨트롤 문자 (U+0000에서 U+001F).
 
